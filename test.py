@@ -4,7 +4,7 @@ from pydub.playback import play
 
 song =  AudioSegment.from_wav("test.wav")
 
-# testing pydub features
+# Testing pydub features / Semantics
 # pydub does things in milliseconds
 five_seconds = 5 * 1000
 first_5_seconds = song[:five_seconds]
@@ -27,11 +27,13 @@ beginning.export("control.wav", "wav")
 control = AudioSegment.from_wav("control.wav")
 play(control)
 
+# Commands
 script = \
 """
     + volume 12
 """
 
+# Testing pyParser / Parser
 VOLUME, PITCH = map(Keyword,"volume pitch".split())
 # define what commands will look like
 rule = Word(printables)("action") \
@@ -40,6 +42,7 @@ rule = Word(printables)("action") \
 
 rules = OneOrMore(Group(rule))
 
+# TODO: add array to store previous sound files
 for r in rules.parseString(script):
 	if r.effect == "volume":
 		if r.action == "+":

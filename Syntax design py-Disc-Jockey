@@ -1,0 +1,12 @@
+Syntax design py-Disc-Jockey
+
+load music.wav
+
++/- volume (1-100)
++/- pitch (1-100)
+
++/- reverb 
++/- delay
++/- octave
++/- equalizer
+distortion, overdrive?

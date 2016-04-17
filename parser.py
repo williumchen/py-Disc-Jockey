@@ -9,14 +9,13 @@ rule = Word(printables)("action") \
 
 rules = OneOrMore(Group(rule))
 
-def getEffect(line):
-	for r in rules.parseString(line):
-		return r.effect
+class Command:
+	def __init__(self, action, effect, value):
+		self.action = action
+		self.effect = effect
+		self.value = value
 
-def getValue(line):
+def parse(line):
 	for r in rules.parseString(line):
-		return r.value
-
-def getAction(line):
-	for r in rules.parseString(line):
-		return r.action
+		temp = Command(r.action, r.effect, r.value)
+	return temp
