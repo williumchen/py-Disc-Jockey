@@ -12,13 +12,17 @@ class Commands(Cmd):
 	def do_load(self, arg):
 		self.curr_song = load_song(arg)
 		self.song_history.append(self.curr_song)
+		print self.song_history
+		print self.curr_song
 		print "Successfully loaded " + arg
 	def help_load(self):
 		print "Loads a song to be editted"
 
 	def do_play(self, s):
 		# TODO: add keyboard exception
+		print "Now playing . . ."
 		playSample(self.curr_song)
+
 	def help_play(self):
 		print "Plays the song currently being editted"
 
@@ -28,7 +32,9 @@ class Commands(Cmd):
 		print "Exports any changes to the current song to a file name of your choice"
 
 	def do_undo(self, arg):
-		self.curr_song = self.song_history[-2]
+		self.song_history.pop()
+		self.curr_song = self.song_history[-1]
+		print self.curr_song
 	def help_undo(self):
 		print "Undoes the most recent change"
 
@@ -36,18 +42,26 @@ class Commands(Cmd):
 		temp = parse(line)
 		if temp.effect == "volume":
 			self.curr_song = volume(self.curr_song, temp.action, temp.value)
+		if temp.effect == "pitch":
+			self.curr_song = pitch(self.curr_song, temp.action, temp.value)
 		self.song_history.append(self.curr_song)
+		print self.song_history
+		print self.curr_song
 	
 	# Record and playback commands
 	def do_record(self, arg):
 		print 'Save future commands to a filename'
 		self.file = open(arg, 'w')
+	def help_record(self):
+		print "Records the edits of a particular song"
 
 	def do_playback(self,arg):
 		print 'Playback commands from a file'
 		self.close()
 		with open(arg) as f:
 			self.cmdqueue.extend(f.read().splitlanes())
+	def help_playback(self):
+		print "Loads edits of a previous session"
 
 	def precmd(self, line):
 		line = line.lower()

@@ -1,6 +1,7 @@
 from pyparsing import *
 from pydub import *
 from pydub.playback import play
+import copy
 
 song =  AudioSegment.from_wav("test.wav")
 
@@ -25,7 +26,7 @@ test = AudioSegment.from_wav("test1.wav")
 
 beginning.export("control.wav", "wav")
 control = AudioSegment.from_wav("control.wav")
-play(control)
+# play(control)
 
 # Commands
 script = \
@@ -42,7 +43,7 @@ rule = Word(printables)("action") \
 
 rules = OneOrMore(Group(rule))
 
-# TODO: add array to store previous sound files
+TODO: add array to store previous sound files
 for r in rules.parseString(script):
 	if r.effect == "volume":
 		if r.action == "+":
@@ -50,13 +51,22 @@ for r in rules.parseString(script):
 		elif r.action == "-":
 			beginning = first_5_seconds - int(r.value)
 
-# for action, effect, value in rules.parseString(script):
-# 	if effect == "volume":
-# 		if action == "+":
-# 			beginning = first_5_seconds + int(value)
-# 		elif action == "-":
-# 			beginning = first_5_seconds - int(value)
+for action, effect, value in rules.parseString(script):
+	if effect == "volume":
+		if action == "+":
+			beginning = first_5_seconds + int(value)
+		elif action == "-":
+			beginning = first_5_seconds - int(value)
 
 beginning.export("volume.wav", "wav")
 volume = AudioSegment.from_wav("volume.wav")
-play(volume)
+# play(volume)
+
+# PITCH TEST
+
+print beginning.frame_rate
+beginning.frame_rate *= 2
+print beginning.frame_rate
+# play(beginning)
+beginning.export("testfps.wav", "wav")
+# play(beginning)
