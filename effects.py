@@ -23,6 +23,10 @@ def pitch(sample, action, value):
 		new_sample.frame_rate /= int(value)
 	return new_sample
 
+def concat(file1, file2):
+	new_sample = file1 + file2
+	return new_sample
+
 def playSample(sample):
 	play(sample)
 

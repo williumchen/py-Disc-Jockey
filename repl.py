@@ -12,8 +12,8 @@ class Commands(Cmd):
 	def do_load(self, arg):
 		self.curr_song = load_song(arg)
 		self.song_history.append(self.curr_song)
-		print self.song_history
-		print self.curr_song
+		# print self.song_history
+		# print self.curr_song
 		print "Successfully loaded " + arg
 	def help_load(self):
 		print "Loads a song to be editted"
@@ -32,21 +32,25 @@ class Commands(Cmd):
 		print "Exports any changes to the current song to a file name of your choice"
 
 	def do_undo(self, arg):
-		self.song_history.pop()
-		self.curr_song = self.song_history[-1]
-		print self.curr_song
+		if len(self.song_history) > 0:
+			self.song_history.pop()
+			self.curr_song = self.song_history[-1]
+		else:
+			print "There are no more edits to undo"
+		# print self.curr_song
 	def help_undo(self):
 		print "Undoes the most recent change"
 
 	def default(self, line):
-		temp = parse(line)
-		if temp.effect == "volume":
-			self.curr_song = volume(self.curr_song, temp.action, temp.value)
-		if temp.effect == "pitch":
-			self.curr_song = pitch(self.curr_song, temp.action, temp.value)
-		self.song_history.append(self.curr_song)
-		print self.song_history
-		print self.curr_song
+		try:
+			temp = parse(line)
+			if temp.effect == "volume":
+				self.curr_song = volume(self.curr_song, temp.action, temp.value)
+			if temp.effect == "pitch":
+				self.curr_song = pitch(self.curr_song, temp.action, temp.value)
+			self.song_history.append(self.curr_song)
+		except:
+			print "Unrecognized command"
 	
 	# Record and playback commands
 	def do_record(self, arg):

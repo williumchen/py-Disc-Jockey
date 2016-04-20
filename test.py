@@ -43,20 +43,22 @@ rule = Word(printables)("action") \
 
 rules = OneOrMore(Group(rule))
 
-TODO: add array to store previous sound files
+# TODO: add array to store previous sound files
 for r in rules.parseString(script):
 	if r.effect == "volume":
 		if r.action == "+":
 			beginning = first_5_seconds + int(r.value)
 		elif r.action == "-":
 			beginning = first_5_seconds - int(r.value)
+	print r
+	print rule
 
-for action, effect, value in rules.parseString(script):
-	if effect == "volume":
-		if action == "+":
-			beginning = first_5_seconds + int(value)
-		elif action == "-":
-			beginning = first_5_seconds - int(value)
+# for action, effect, value in rules.parseString(script):
+# 	if effect == "volume":
+# 		if action == "+":
+# 			beginning = first_5_seconds + int(value)
+# 		elif action == "-":
+# 			beginning = first_5_seconds - int(value)
 
 beginning.export("volume.wav", "wav")
 volume = AudioSegment.from_wav("volume.wav")
@@ -64,9 +66,9 @@ volume = AudioSegment.from_wav("volume.wav")
 
 # PITCH TEST
 
-print beginning.frame_rate
+#print beginning.frame_rate
 beginning.frame_rate *= 2
-print beginning.frame_rate
+# print beginning.frame_rate
 # play(beginning)
 beginning.export("testfps.wav", "wav")
 # play(beginning)
