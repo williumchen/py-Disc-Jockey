@@ -70,8 +70,9 @@ class Commands(Cmd):
 		"""
 		Undoes the most recent edit
 		"""
-		if len(self.song_history) > 0:
+		if len(self.song_history) > 1:
 			self.song_history.pop()
+			self.command_history.pop()
 			self.curr_song = self.song_history[-1]
 		else:
 			print "There are no more edits to undo"
@@ -89,17 +90,31 @@ class Commands(Cmd):
 		print ""
 		if not self.command_history:
 			print "No history of edits"
-		if line == '':
-			for i, command in enumerate(self.command_history):
-				print "(" + str(i+1) + ") " + command
 		else:
-			for i, command in enumerate(self.command_history):
-				print "(" + str(i+1) + ") " + command
-				if str(i+1) == line:
-					break
+			if line == '':
+				for i, command in enumerate(self.command_history):
+					print "(" + str(i+1) + ") " + command
+			else:
+				for i, command in enumerate(self.command_history):
+					print "(" + str(i+1) + ") " + command
+					if str(i+1) == line:
+						break
 		print ""
 	def help_history(self):
 		print "Optionally pass in an integer. Displays previous edits to the current song"
+
+	def do_revert(self, line):
+		"""
+		Revert song to a certain point in the edit history
+		"""
+		if not self.command_history:
+			print "No existing history of edits"
+		else:
+			self.curr_song = self.song_history[int(line)]
+			del self.song_history[int(line)+1:]
+			del self.command_history[int(line):]
+	def help_revert(self):
+		print "Pass in an integer. Reverts the edited song to that point in the edit history"
 
 	def default(self, line):
 		"""
@@ -110,11 +125,11 @@ class Commands(Cmd):
 		else:
 			try:
 				temp = parse(line)
-				self.command_history.append(line)
 				if temp.effect == "volume":
 					self.curr_song = volume(self.curr_song, temp.action, temp.value)
 				if temp.effect == "pitch":
 					self.curr_song = pitch(self.curr_song, temp.action, temp.value)
+				self.command_history.append(line)	
 				self.song_history.append(self.curr_song)
 			except:
 				print "Unrecognized command"
