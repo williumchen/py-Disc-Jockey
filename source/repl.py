@@ -7,7 +7,7 @@ class Commands(Cmd):
 	This class essentially ties together the parser and effects
 	"""
 	intro = "Welcome to the py-disk-jockey shell. Type help or ? to list commands.\n"
-	prompt = '(py-DJ)'
+	prompt = '(py-DJ) '
 
 	# File name for 'record'
 	file = None
@@ -86,36 +86,38 @@ class Commands(Cmd):
 		"""
 		See previous changes to current song
 		"""
+		print ""
+		if not self.command_history:
+			print "No history of edits"
 		if line == '':
 			for i, command in enumerate(self.command_history):
-				print "(" + i + ") "
-				print command
-				print "\n"
+				print "(" + str(i+1) + ") " + command
 		else:
 			for i, command in enumerate(self.command_history):
-				if i > line:
+				print "(" + str(i+1) + ") " + command
+				if str(i+1) == line:
 					break
-				print "(" + i + ") "
-				print command
-				print "\n"
-
-	def help_history(self, line):
+		print ""
+	def help_history(self):
 		print "Optionally pass in an integer. Displays previous edits to the current song"
 
 	def default(self, line):
 		"""
 		Handles parsing commands and uses effects.py to create the sound effects
 		"""
-		try:
-			self.command_history.append(line)
-			temp = parse(line)
-			if temp.effect == "volume":
-				self.curr_song = volume(self.curr_song, temp.action, temp.value)
-			if temp.effect == "pitch":
-				self.curr_song = pitch(self.curr_song, temp.action, temp.value)
-			self.song_history.append(self.curr_song)
-		except:
-			print "Unrecognized command"
+		if self.curr_song is None:
+			print "No loaded song"
+		else:
+			try:
+				temp = parse(line)
+				self.command_history.append(line)
+				if temp.effect == "volume":
+					self.curr_song = volume(self.curr_song, temp.action, temp.value)
+				if temp.effect == "pitch":
+					self.curr_song = pitch(self.curr_song, temp.action, temp.value)
+				self.song_history.append(self.curr_song)
+			except:
+				print "Unrecognized command"
 	
 	# Record and playback commands
 	def do_track(self, arg):
