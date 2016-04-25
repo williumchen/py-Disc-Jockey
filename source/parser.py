@@ -4,12 +4,12 @@ VOLUME, PITCH = map(Keyword,"volume pitch".split())
 
 # define what commands will look like
 
-action_rule = Word(printables)("action") \
+basic_rule = Word(printables)("action") \
 		+ (VOLUME | PITCH)("effect") \
 		+ Word(nums)("value")
 
 # rule = concat_rule | action_rule
-rule = action_rule
+rule = basic_rule
 # concat_rule = Word(printables)("file1") \
 # 			+ Literal("+") \
 # 			+ Word(printables)("file2")
@@ -20,7 +20,7 @@ rule = action_rule
 
 rules = OneOrMore(Group(rule))
 
-class Action:
+class Basic:
 	def __init__(self, action, effect, value):
 		self.action = action
 		self.effect = effect
@@ -33,9 +33,9 @@ class Action:
 
 def parse(line):
 	for r in rules.parseString(line):
-		temp = Action(r.action, r.effect, r.value)
+		temp = Basic(r.action, r.effect, r.value)
 	return temp
-	
+
 # TODO: try catch exception
 # def parse_concat(line):
 # 	for r in rules.parseString(line):

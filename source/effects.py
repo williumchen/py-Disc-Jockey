@@ -18,10 +18,16 @@ def volume(sample, action, value):
 	value. 
 	"""
 	# Decibel to volume ratio: change of 6 dB understood to be twice the volume
-	if action == "+":
+	if action == "*":
 		new_sample = sample + int(value)*3
-	else:
+	elif action == "+":
+		new_sample = sample + int(value)
+	elif action == "-":
+		new_sample = sample - int(value)
+	elif action == "/":
 		new_sample = sample - int(value)*3
+	else:
+		return
 	return new_sample
 
 # * and / for factor increase, and + and - for linear increase
@@ -37,8 +43,10 @@ def pitch(sample, action, value):
 	new_sample = copy.copy(sample)
 	if action == "+":
 		new_sample.frame_rate *= int(value)
-	else:
+	elif action == "-":
 		new_sample.frame_rate /= int(value)
+	else:
+		return
 	return new_sample
 
 def concat(file1, file2):
