@@ -31,7 +31,7 @@ control = AudioSegment.from_wav("control.wav")
 # Commands
 script = \
 """
-    + volume 12
+    + volume 10
 """
 
 # Testing pyParser / Parser
@@ -59,16 +59,15 @@ for r in rules.parseString(script):
 # 			beginning = first_5_seconds + int(value)
 # 		elif action == "-":
 # 			beginning = first_5_seconds - int(value)
-
+beginning = beginning + beginning
 beginning.export("volume.wav", "wav")
 volume = AudioSegment.from_wav("volume.wav")
-# play(volume)
+play(volume)
 
 # PITCH TEST
-
-#print beginning.frame_rate
-beginning.frame_rate *= 2
+#print beginning.frame_rate 
+# beginning.frame_rate *= 2
 # print beginning.frame_rate
 # play(beginning)
-beginning.export("testfps.wav", "wav")
+# beginning.export("testfps.wav", "wav")
 # play(beginning)

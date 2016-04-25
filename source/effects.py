@@ -54,7 +54,9 @@ def concat(file1, file2):
 	Input: 2 .wav files
 	Returns a .wav with file2 appended to file1
 	"""
-	new_sample = file1 + file2
+	song1 = AudioSegment.from_file(file1)
+	song2 = AudioSegment.from_file(file2)
+	new_sample = song1 + song2
 	return new_sample
 
 # Allows for threading so REPL doesn't hang while a song

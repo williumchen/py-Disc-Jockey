@@ -13,11 +13,13 @@ class Commands(Cmd):
 	file = None
 
 	# Current song that is being editted
-	# TODO: add multiple songs that can be worked with
 	curr_song = None
 
+	# List of songs loaded
+	# TODO: Allow user to work with multiple songs
+	song_list = []
+
 	# List of edits to the current song
-	# TODO: allow users to see the history of edits
 	song_history = []
 
 	# List of commands
@@ -34,6 +36,7 @@ class Commands(Cmd):
 		try: 
 			self.curr_song = load_song(arg)
 			self.song_history.append(self.curr_song)
+			# self.song_list.append(self.curr_song)
 			print "Successfully loaded " + arg
 		except:
 			print "File not found"
@@ -48,7 +51,6 @@ class Commands(Cmd):
 		Plays the currently loaded song with any edits made
 		"""
 		PlayThread(playSample, self.curr_song).start()
-
 	def help_play(self):
 		"""
 		Help documentation for play
@@ -125,15 +127,24 @@ class Commands(Cmd):
 		else:
 			try:
 				temp = parse(line)
-				if temp.effect == "volume":
-					self.curr_song = volume(self.curr_song, temp.action, temp.value)
-				if temp.effect == "pitch":
-					self.curr_song = pitch(self.curr_song, temp.action, temp.value)
+				if isinstance(temp, Basic):
+					if temp.effect == "volume":
+						self.curr_song = volume(self.curr_song, temp.action, temp.value)
+					if temp.effect == "pitch":
+						self.curr_song = pitch(self.curr_song, temp.action, temp.value)
+				if isinstance(temp, Concat):
+					self.curr_song = concat(temp.file1, temp.file2)
 				self.command_history.append(line)	
 				self.song_history.append(self.curr_song)
 			except:
 				print "Unrecognized command"
 	
+	def help_volume(self):
+		print "+,-,*,/ volume (integer value)"
+	def help_pitch(self):
+		print "+,- pitch (integer value)"
+	def help_concat(self):
+		print "file1 + file2"
 	# Record and playback commands
 	def do_track(self, arg):
 		print 'Save future commands to a filename'
