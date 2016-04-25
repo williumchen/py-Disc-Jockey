@@ -35,7 +35,8 @@ def parse(line):
 	for r in rules.parseString(line):
 		temp = Action(r.action, r.effect, r.value)
 	return temp
-
+	
+# TODO: try catch exception
 # def parse_concat(line):
 # 	for r in rules.parseString(line):
 # 		temp = Concat(r.file1, r.file2)

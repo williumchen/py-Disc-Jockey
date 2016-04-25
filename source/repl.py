@@ -2,8 +2,10 @@ from cmd import *
 from effects import *
 from parser import *
 
-# Class for the REPL interface that uses the cmd library
 class Commands(Cmd):
+	""" This class creates the REPL interface by using the cmd library
+	This class essentially ties together the parser and effects
+	"""
 	intro = "Welcome to the py-disk-jockey shell. Type help or ? to list commands.\n"
 	prompt = '(py-DJ)'
 
@@ -18,35 +20,56 @@ class Commands(Cmd):
 	# TODO: allow users to see the history of edits
 	song_history = []
 
+	# List of commands
+	command_history = []
+
 	# Each REPL command has a do_(command) and help_(command).
 	# The do_(command) actually completes the command whereas the help_(command)
 	# provides documentation when user types "help (command)"
 
-	# Loads a song to be editted
 	def do_load(self, arg):
-		self.curr_song = load_song(arg)
-		self.song_history.append(self.curr_song)
-		print "Successfully loaded " + arg
+		"""
+		Loads a song to be editted
+		"""
+		try: 
+			self.curr_song = load_song(arg)
+			self.song_history.append(self.curr_song)
+			print "Successfully loaded " + arg
+		except:
+			print "File not found"
 	def help_load(self):
+		"""
+		Help documentation for load
+		"""
 		print "Loads a song to be editted"
 
-	# Plays a song with any edits made
-	# TODO: Multi-threading to allow users to edit while playing the song
 	def do_play(self, s):
-		print "Now playing . . ."
+		"""
+		Plays the currently loaded song with any edits made
+		"""
 		PlayThread(playSample, self.curr_song).start()
 
 	def help_play(self):
+		"""
+		Help documentation for play
+		"""
 		print "Plays the song currently being editted"
 
-	# Saves the edits to a song by exporting to a .wav file named by the user
 	def do_save(self, arg):
+		"""
+		Saves the edits to a song by exporting to a .wav file named by the user
+		"""
 		self.curr_song.export(arg, "wav")
 	def help_save(self):
+		"""
+		Help documentation for save
+		"""
 		print "Exports any changes to the current song to a file name of your choice"
 
-	# Undoes the most recent edit
 	def do_undo(self, arg):
+		"""
+		Undoes the most recent edit
+		"""
 		if len(self.song_history) > 0:
 			self.song_history.pop()
 			self.curr_song = self.song_history[-1]
@@ -54,11 +77,37 @@ class Commands(Cmd):
 			print "There are no more edits to undo"
 		# print self.curr_song
 	def help_undo(self):
+		"""
+		Help documentation for undo
+		"""
 		print "Undoes the most recent change"
 
-	# Handles parsing commands and uses effects.py to create the sound effects
+	def do_history(self, line):
+		"""
+		See previous changes to current song
+		"""
+		if line == '':
+			for i, command in enumerate(self.command_history):
+				print "(" + i + ") "
+				print command
+				print "\n"
+		else:
+			for i, command in enumerate(self.command_history):
+				if i > line:
+					break
+				print "(" + i + ") "
+				print command
+				print "\n"
+
+	def help_history(self, line):
+		print "Optionally pass in an integer. Displays previous edits to the current song"
+
 	def default(self, line):
+		"""
+		Handles parsing commands and uses effects.py to create the sound effects
+		"""
 		try:
+			self.command_history.append(line)
 			temp = parse(line)
 			if temp.effect == "volume":
 				self.curr_song = volume(self.curr_song, temp.action, temp.value)
@@ -69,10 +118,10 @@ class Commands(Cmd):
 			print "Unrecognized command"
 	
 	# Record and playback commands
-	def do_record(self, arg):
+	def do_track(self, arg):
 		print 'Save future commands to a filename'
 		self.file = open(arg, 'w')
-	def help_record(self):
+	def help_track(self):
 		print "Records the edits of a particular song"
 
 	def do_playback(self,arg):
