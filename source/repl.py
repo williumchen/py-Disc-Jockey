@@ -19,7 +19,6 @@ class Commands(Cmd):
 	song_list = {}
 
 	# List of edits to the current song
-	# TODO: implement history unique to each song
 	song_history = []
 
 	# List of commands
@@ -172,6 +171,7 @@ class Commands(Cmd):
 					if temp.effect == "pitch":
 						self.curr_song = pitch(self.curr_song, temp.action, temp.value)
 				if isinstance(temp, Concat):
+					# TODO: make variable name to refer to this concat file
 					self.curr_song = concat(temp.file1, temp.file2)
 				self.song_list[self.song_name][1].append(line)
 				self.song_list[self.song_name][2].append(self.curr_song)

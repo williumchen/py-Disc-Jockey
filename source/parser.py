@@ -1,7 +1,7 @@
 from pyparsing import *
 
 # Keywords mapped
-VOLUME, PITCH = map(Keyword,"volume pitch".split())
+VOLUME, PITCH, APPEND = map(Keyword,"volume pitch append".split())
 
 # Define the rules to be parsed
 # TODO: Time stamp rules?
@@ -9,8 +9,10 @@ basic_rule = Word(printables)("action") \
 		+ (VOLUME | PITCH)("effect") \
 		+ Word(nums)("value")
 
-concat_rule = Word(printables)("file1") \
-			+ Literal("+") \
+concat_rule = Word(printables)("result") \
+			+ Literal("=") \
+			+ Word(printables)("file1") \
+			+ (APPEND)("append") \
 			+ Word(printables)("file2")
 
 rule = basic_rule | concat_rule
@@ -31,7 +33,8 @@ class Concat:
 	"""
 	IR for concat rule
 	"""
-	def __init__(self, file1, file2):
+	def __init__(self, result, file1, file2):
+		self.result = result
 		self.file1 = file1
 		self.file2 = file2
 
@@ -42,6 +45,6 @@ def parse(line):
 	for r in rules.parseString(line):
 		if r.action != '' or r.effect != '' or r.value != '':
 			temp = Basic(r.action, r.effect, r.value)
-		if r.file1 != '' or r.file2 != '':
-			temp = Concat(r.file1, r.file2)
+		if r.result != '' or r.file1 != '' or r.file2 != '':
+			temp = Concat(r.result, r.file1, r.file2)
 	return temp
