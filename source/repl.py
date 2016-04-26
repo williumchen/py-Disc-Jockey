@@ -16,8 +16,7 @@ class Commands(Cmd):
 	curr_song = None
 
 	# List of songs loaded
-	# TODO: Allow user to work with multiple songs
-	song_list = []
+	song_list = {}
 
 	# List of edits to the current song
 	song_history = []
@@ -36,7 +35,7 @@ class Commands(Cmd):
 		try: 
 			self.curr_song = load_song(arg)
 			self.song_history.append(self.curr_song)
-			# self.song_list.append(self.curr_song)
+			self.song_list[arg] = self.curr_song
 			print "Successfully loaded " + arg
 		except:
 			print "File not found"
@@ -45,6 +44,15 @@ class Commands(Cmd):
 		Help documentation for load
 		"""
 		print "Loads a song to be editted"
+
+	def do_edit(self, arg):
+		"""
+		Sets a song as current song
+		"""
+		self.curr_song = self.song_list[arg]
+		print "Currently editting: " + arg
+	def help_edit(self):
+		print "Selects a loaded song to be editted"
 
 	def do_play(self, s):
 		"""
@@ -89,15 +97,16 @@ class Commands(Cmd):
 		"""
 		See previous changes to current song
 		"""
+		# TODO: history defaults to 5, typing history all will show everything
 		print ""
 		if not self.command_history:
 			print "No history of edits"
 		else:
 			if line == '':
-				for i, command in enumerate(self.command_history):
+				for i, command in enumerate(reversed(self.command_history)):
 					print "(" + str(i+1) + ") " + command
 			else:
-				for i, command in enumerate(self.command_history):
+				for i, command in enumerate(reversed(self.command_history)):
 					print "(" + str(i+1) + ") " + command
 					if str(i+1) == line:
 						break
@@ -112,9 +121,9 @@ class Commands(Cmd):
 		if not self.command_history:
 			print "No existing history of edits"
 		else:
-			self.curr_song = self.song_history[int(line)]
-			del self.song_history[int(line)+1:]
-			del self.command_history[int(line):]
+			self.curr_song = list(reversed(self.song_history))[int(line)]
+			del self.song_history[-(int(line)-1):]
+			del self.command_history[-(int(line)-1):]
 	def help_revert(self):
 		print "Pass in an integer. Reverts the edited song to that point in the edit history"
 
@@ -139,12 +148,14 @@ class Commands(Cmd):
 			except:
 				print "Unrecognized command"
 	
+	# Misc help commands
 	def help_volume(self):
 		print "+,-,*,/ volume (integer value)"
 	def help_pitch(self):
 		print "+,- pitch (integer value)"
 	def help_concat(self):
 		print "file1 + file2"
+
 	# Record and playback commands
 	def do_track(self, arg):
 		print 'Save future commands to a filename'

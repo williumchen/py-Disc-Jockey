@@ -4,6 +4,9 @@ from pydub.playback import play
 import copy
 
 song =  AudioSegment.from_wav("test.wav")
+song1 = AudioSegment.from_file("myboo.mp3")
+clip = song1[26000:37000]
+clip.export("test2.wav", "wav")
 
 # Testing pydub features / Semantics
 # pydub does things in milliseconds
