@@ -1,5 +1,7 @@
 # py-disc-jockey
-Abbreviated as py-DJ. py-DJ is a free domain-specific language for quickly editting audio files in a way that is intuitive and easy to learn, with the eventual goal of making audio-mixing more user friendly. py-DJ is a command-line interface that is entirely text-based. py-DJ offers support for basic features (volume adjustment, pitch adjustment, and concatenation of files), and will be later expanded to be more feature-rich. 
+*Abbreviated as py-DJ.*
+
+py-DJ is a free domain-specific language for quickly editting audio files in a way that is intuitive and easy to learn, with the eventual goal of making audio-mixing more user friendly. py-DJ is a command-line interface that is entirely text-based. py-DJ offers support for basic features (volume adjustment, pitch adjustment, and concatenation of files), and will be later expanded to be more feature-rich. 
 
 ## Dependencies
 * Python 2.7.x
