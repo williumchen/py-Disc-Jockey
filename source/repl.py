@@ -14,11 +14,12 @@ class Commands(Cmd):
 
 	# Current song that is being editted
 	curr_song = None
-
+	song_name = None
 	# List of songs loaded
 	song_list = {}
 
 	# List of edits to the current song
+	# TODO: implement history unique to each song
 	song_history = []
 
 	# List of commands
@@ -33,9 +34,14 @@ class Commands(Cmd):
 		Loads a song to be editted
 		"""
 		try: 
+			self.song_name = arg
 			self.curr_song = load_song(arg)
-			self.song_history.append(self.curr_song)
-			self.song_list[arg] = self.curr_song
+			# self.song_history.append(self.curr_song)
+			if self.song_list.get(arg) is None:
+				self.song_list[arg] = [self.curr_song, [], [self.curr_song]]
+			else:
+				self.song_list[arg] = [self.curr_song, self.song_list[arg][1], self.song_list[arg][2]]
+			# print self.song_list
 			print "Successfully loaded " + arg
 		except:
 			print "File not found"
@@ -49,7 +55,8 @@ class Commands(Cmd):
 		"""
 		Sets a song as current song
 		"""
-		self.curr_song = self.song_list[arg]
+		self.song_name = arg
+		self.curr_song = self.song_list[arg][0]
 		print "Currently editting: " + arg
 	def help_edit(self):
 		print "Selects a loaded song to be editted"
@@ -82,14 +89,20 @@ class Commands(Cmd):
 		"""
 		try:
 			if arg == '':
-				self.song_history.pop()
-				self.command_history.pop()
-				self.curr_song = self.song_history[-1]
+				# self.song_history.pop()
+				# self.command_history.pop()
+				self.song_list[self.song_name][1].pop()
+				self.song_list[self.song_name][2].pop()
+				self.song_list[self.song_name][0] = self.song_list[self.song_name][2][-1]
+				# self.curr_song = self.song_history[-1]
 			elif arg != '':
 				for x in range(int(arg)):
-					self.song_history.pop()
-					self.command_history.pop()
-					self.curr_song = self.song_history[-1]
+					# self.song_history.pop()
+					# self.command_history.pop()
+					# self.curr_song = self.song_history[-1]
+					self.song_list[self.song_name][1].pop()
+					self.song_list[self.song_name][2].pop()
+					self.song_list[self.song_name][0] = self.song_list[self.song_name][2][-1]
 		except:
 			print "There are no more edits to undo"
 	def help_undo(self):
@@ -104,14 +117,17 @@ class Commands(Cmd):
 		"""
 		# TODO: history defaults to 5, typing history all will show everything
 		print ""
-		if not self.command_history:
+		if not self.song_list[self.song_name][1]:
+		# if not self.command_history:
 			print "No history of edits"
 		else:
 			if line == '':
-				for i, command in enumerate(reversed(self.command_history)):
+				# for i, command in enumerate(reversed(self.command_history)):
+				for i, command in enumerate(reversed(self.song_list[self.song_name][1])):
 					print "(" + str(i+1) + ") " + command
 			else:
-				for i, command in enumerate(reversed(self.command_history)):
+				# for i, command in enumerate(reversed(self.command_history)):
+				for i, command in enumerate(reversed(self.song_list[self.song_name][1])):
 					print "(" + str(i+1) + ") " + command
 					if str(i+1) == line:
 						break
@@ -123,12 +139,21 @@ class Commands(Cmd):
 		"""
 		Revert song to a certain point in the edit history
 		"""
-		if not self.command_history:
-			print "No existing history of edits"
-		else:
-			self.curr_song = list(reversed(self.song_history))[int(line)]
-			del self.song_history[-(int(line)-1):]
-			del self.command_history[-(int(line)-1):]
+		# if not self.command_history:
+		try: 
+			if not self.song_list[self.song_name][1]:
+				print "No existing history of edits"
+			else:
+				# self.curr_song = list(reversed(self.song_history))[int(line)]
+				# del self.song_history[-(int(line)-1):]
+				# del self.command_history[-(int(line)-1):]
+				self.song_list[self.song_name][0] = list(reversed(self.song_list[self.song_name][2]))[int(line)]
+				# Song history
+				del self.song_list[self.song_name][2][-(int(line)-1):]
+				# Command history
+				del self.song_list[self.song_name][1][-(int(line)-1):]
+		except:
+			print "Cannot reach specified state"
 	def help_revert(self):
 		print "Pass in an integer. Reverts the edited song to that point in the edit history"
 
@@ -148,8 +173,10 @@ class Commands(Cmd):
 						self.curr_song = pitch(self.curr_song, temp.action, temp.value)
 				if isinstance(temp, Concat):
 					self.curr_song = concat(temp.file1, temp.file2)
-				self.command_history.append(line)	
-				self.song_history.append(self.curr_song)
+				self.song_list[self.song_name][1].append(line)
+				self.song_list[self.song_name][2].append(self.curr_song)
+				# self.command_history.append(line)	
+				# self.song_history.append(self.curr_song)
 			except:
 				print "Unrecognized command"
 	
