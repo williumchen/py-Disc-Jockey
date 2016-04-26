@@ -80,13 +80,18 @@ class Commands(Cmd):
 		"""
 		Undoes the most recent edit
 		"""
-		if len(self.song_history) > 1:
-			self.song_history.pop()
-			self.command_history.pop()
-			self.curr_song = self.song_history[-1]
-		else:
+		try:
+			if arg == '':
+				self.song_history.pop()
+				self.command_history.pop()
+				self.curr_song = self.song_history[-1]
+			elif arg != '':
+				for x in range(int(arg)):
+					self.song_history.pop()
+					self.command_history.pop()
+					self.curr_song = self.song_history[-1]
+		except:
 			print "There are no more edits to undo"
-		# print self.curr_song
 	def help_undo(self):
 		"""
 		Help documentation for undo
