@@ -15,7 +15,13 @@ concat_rule = Word(printables)("result") \
 			+ (APPEND)("append") \
 			+ Word(printables)("file2")
 
-rule = basic_rule | concat_rule
+average_rule = Word(printables)("result") \
+			 + Literal("=") \
+			 + Word(printables)("file1") \
+			 + Literal("+") \
+			 + Word(printables)("file2")
+ 
+rule = basic_rule | concat_rule | average_rule
 
 rules = OneOrMore(Group(rule))
 
@@ -29,7 +35,7 @@ class Basic:
 		self.effect = effect
 		self.value = value
 
-class Concat:
+class Combine:
 	"""
 	IR for concat rule
 	"""
@@ -46,5 +52,5 @@ def parse(line):
 		if r.action != '' or r.effect != '' or r.value != '':
 			temp = Basic(r.action, r.effect, r.value)
 		if r.result != '' or r.file1 != '' or r.file2 != '':
-			temp = Concat(r.result, r.file1, r.file2)
+			temp = Combine(r.result, r.file1, r.file2)
 	return temp

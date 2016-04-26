@@ -58,10 +58,16 @@ def concat(file1, file2):
 	song2 = AudioSegment.from_file(file2)
 	new_sample = song1 + song2
 	return new_sample
-	
-# TODO: average files (play both sounds on top of each other)
-# def average(file1, file2):
 
+def average(file1, file2):
+	"""
+	Input: 2 .wav files
+	Returns a .wav with both files overlayed
+	"""
+	song1 = AudioSegment.from_file(file1)
+	song2 = AudioSegment.from_file(file2)
+	new_sample = song1.overlay(song2)
+	return new_sample
 # Allows for threading so REPL doesn't hang while a song
 # is being played
 

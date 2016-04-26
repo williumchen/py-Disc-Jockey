@@ -60,6 +60,17 @@ class Commands(Cmd):
 	def help_edit(self):
 		print "Selects a loaded song to be editted"
 
+	def do_display(self, arg):
+		"""
+		Displays songs loaded
+		"""
+		print ""
+		for i, key in enumerate(self.song_list):
+			print "(" + str(i+1) + ") " + str(key)
+		print ""
+	def help_display(self):
+		print "Displays all loaded songs"
+
 	def do_play(self, s):
 		"""
 		Plays the currently loaded song with any edits made
@@ -115,11 +126,11 @@ class Commands(Cmd):
 		See previous changes to current song
 		"""
 		# TODO: history defaults to 5, typing history all will show everything
-		print ""
 		if not self.song_list[self.song_name][1]:
 		# if not self.command_history:
 			print "No history of edits"
 		else:
+			print ""
 			if line == '':
 				# for i, command in enumerate(reversed(self.command_history)):
 				for i, command in enumerate(reversed(self.song_list[self.song_name][1])):
@@ -130,7 +141,7 @@ class Commands(Cmd):
 					print "(" + str(i+1) + ") " + command
 					if str(i+1) == line:
 						break
-		print ""
+			print ""
 	def help_history(self):
 		print "Optionally pass in an integer. Displays previous edits to the current song"
 
@@ -163,22 +174,26 @@ class Commands(Cmd):
 		if self.curr_song is None:
 			print "No loaded song"
 		else:
-			try:
-				temp = parse(line)
-				if isinstance(temp, Basic):
-					if temp.effect == "volume":
-						self.curr_song = volume(self.curr_song, temp.action, temp.value)
-					if temp.effect == "pitch":
-						self.curr_song = pitch(self.curr_song, temp.action, temp.value)
-				if isinstance(temp, Concat):
-					# TODO: make variable name to refer to this concat file
+			# try:
+			temp = parse(line)
+			if isinstance(temp, Basic):
+				if temp.effect == "volume":
+					self.curr_song = volume(self.curr_song, temp.action, temp.value)
+				elif temp.effect == "pitch":
+					self.curr_song = pitch(self.curr_song, temp.action, temp.value)
+			if isinstance(temp, Combine):
+				if "append" in line:
 					self.curr_song = concat(temp.file1, temp.file2)
-				self.song_list[self.song_name][1].append(line)
-				self.song_list[self.song_name][2].append(self.curr_song)
+					self.do_save(temp.result)
+				elif "+" in line:
+					self.curr_song = average(temp.file1, temp.file2)
+					self.do_save(temp.result)
+			self.song_list[self.song_name][1].append(line)
+			self.song_list[self.song_name][2].append(self.curr_song)
 				# self.command_history.append(line)	
 				# self.song_history.append(self.curr_song)
-			except:
-				print "Unrecognized command"
+			# except:
+			# 	print "Unrecognized command"
 	
 	# Misc help commands
 	def help_volume(self):
@@ -186,7 +201,9 @@ class Commands(Cmd):
 	def help_pitch(self):
 		print "+,- pitch (integer value)"
 	def help_concat(self):
-		print "file1 + file2"
+		print "result = file1.wav append file2.wav"
+	def help_average(self):
+		print "result = file1.wav + file2.wav"
 
 	# Record and playback commands
 	def do_track(self, arg):
