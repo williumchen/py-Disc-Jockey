@@ -16,3 +16,6 @@ Use of py-DJ relies on [Python 2.7.x](https://www.python.org/downloads/).
 2. Run the REPL file ``` repl.py ``` in the source directory with:
 
   ``` python repl.py ```
+  
+## Usage
+All currently implemented features can be summarized by using ``` help ``` or ``` ? ``` in the REPL interface. Further details of each features are found by typing ``` help [feature] ```.
