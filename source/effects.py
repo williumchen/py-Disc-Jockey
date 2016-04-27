@@ -1,5 +1,7 @@
 import copy
 import threading
+import pyaudio
+import wave
 from pydub import *
 from pydub.playback import play
 
@@ -79,7 +81,7 @@ def reverse(sample):
 
 # Allows for threading so REPL doesn't hang while a song
 # is being played
-class PlayThread(threading.Thread):
+class Thread(threading.Thread):
 	""" This class allows for multithreading with pyDJ
 
 	More specifically, this class allows for the play function to be 
@@ -104,3 +106,35 @@ def playSample(sample):
 	except:
 		print "File not found"
 
+# TODO: Not working, figure out threading and keyboard interrupt
+def record(end):
+	"""
+	Input: the name of an export file
+	Returns a .wav recording
+	Forked from pyAudio tutorials
+	"""
+	CHUNK = 1024 
+	FORMAT = pyaudio.paInt16 #paInt8
+	CHANNELS = 2 
+	RATE = 44100 # sample rate
+	WAVE_OUTPUT_FILENAME = end
+
+	p = pyaudio.PyAudio()
+
+	stream = p.open(format=FORMAT,
+	                channels=CHANNELS,
+	                rate=RATE,
+	                input=True,
+	                frames_per_buffer=CHUNK) #buffer
+
+	frames = []
+
+	while True:
+		try:
+		    data = stream.read(CHUNK)
+		    frames.append(data) # 2 bytes(16 bits) per channel
+		except (KeyboardInterrupt, SystemExit):
+			break
+			stream.stop_stream()
+			stream.close()
+			p.terminate()

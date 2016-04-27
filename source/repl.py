@@ -68,24 +68,24 @@ class Commands(Cmd):
 	def help_edit(self):
 		print "Selects a loaded song to be editted"
 
-	def do_display(self, arg):
+	def do_files(self, arg):
 		"""
 		Displays songs loaded
 		"""
 		print ""
 		for i, key in enumerate(self.song_list):
+			print "(" + str(i+1) + ") " + str(key),
 			if key == self.song_name:
-				print "*",
-			print "(" + str(i+1) + ") " + str(key)
-		print ""
-	def help_display(self):
+				print " *"
+			print ""
+	def help_files(self):
 		print "Displays all loaded songs"
 
 	def do_play(self, s):
 		"""
 		Plays the currently loaded song with any edits made
 		"""
-		PlayThread(playSample, self.curr_song).start()
+		Thread(playSample, self.curr_song).start()
 	def help_play(self):
 		"""
 		Help documentation for play
@@ -181,11 +181,15 @@ class Commands(Cmd):
 		"""
 		Handles parsing commands and uses effects.py to create the sound effects
 		"""
-		if self.curr_song is None:
-			print "No loaded song"
-		else:
-			# try:
+		try:
 			temp = parse(line)
+		# 	if isinstance(temp, Record):
+		# 		Thread(record, temp.end).start()
+		# 		self.do_load(temp.end)
+		# 	else:
+		# 		print "No loaded song"
+			if self.curr_song is None:
+				print "No loaded song"
 			if isinstance(temp, Basic):
 				if temp.effect == "volume":
 					self.curr_song = volume(self.curr_song, temp.action, temp.value)
@@ -202,10 +206,10 @@ class Commands(Cmd):
 				self.curr_song = reverse(self.curr_song)
 			self.song_list[self.song_name][1].append(line)
 			self.song_list[self.song_name][2].append(self.curr_song)
-				# self.command_history.append(line)	
-				# self.song_history.append(self.curr_song)
-			# except:
-			# 	print "Unrecognized command"
+			# self.command_history.append(line)	
+			# self.song_history.append(self.curr_song)
+		except:
+			print "Unrecognized command"
 	
 	# Misc help commands
 	def help_volume(self):
