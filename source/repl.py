@@ -115,6 +115,7 @@ class Commands(Cmd):
 				self.song_list[self.song_name][1].pop()
 				self.song_list[self.song_name][2].pop()
 				self.song_list[self.song_name][0] = self.song_list[self.song_name][2][-1]
+				self.curr_song = self.song_list[self.song_name][0]
 				# self.curr_song = self.song_history[-1]
 			elif arg != '':
 				for x in range(int(arg)):
