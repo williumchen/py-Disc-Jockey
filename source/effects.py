@@ -106,7 +106,7 @@ def playSample(sample):
 	except:
 		print "File not found"
 
-# TODO: Not working, figure out threading and keyboard interrupt
+# TODO: Not working, need to figure out threading and keyboard interrupt
 def record(end):
 	"""
 	Input: the name of an export file

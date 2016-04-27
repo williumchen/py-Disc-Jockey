@@ -6,7 +6,7 @@ class Commands(Cmd):
 	""" This class creates the REPL interface by using the cmd library
 	This class essentially ties together the parser and effects
 	"""
-	intro = "Welcome to the py-disk-jockey shell. Type help or ? to list commands.\n"
+	intro = "Welcome to the py-disk-jockey command-line interface. Type help or ? to list commands.\n"
 	prompt = '(py-DJ) '
 
 	# File name for 'record'
