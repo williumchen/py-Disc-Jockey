@@ -76,8 +76,9 @@ class Commands(Cmd):
 		for i, key in enumerate(self.song_list):
 			print "(" + str(i+1) + ") " + str(key),
 			if key == self.song_name:
-				print " *"
+				print " *",
 			print ""
+		print ""
 	def help_files(self):
 		print "Displays all loaded songs"
 
@@ -167,7 +168,8 @@ class Commands(Cmd):
 				# self.curr_song = list(reversed(self.song_history))[int(line)]
 				# del self.song_history[-(int(line)-1):]
 				# del self.command_history[-(int(line)-1):]
-				self.song_list[self.song_name][0] = list(reversed(self.song_list[self.song_name][2]))[int(line)]
+				self.song_list[self.song_name][0] = list(reversed(self.song_list[self.song_name][2]))[int(line)-1]
+				self.curr_song = self.song_list[self.song_name][0]
 				# Song history
 				del self.song_list[self.song_name][2][-(int(line)-1):]
 				# Command history
@@ -204,8 +206,11 @@ class Commands(Cmd):
 					self.do_save(temp.result)
 			elif isinstance(temp, Reverse):
 				self.curr_song = reverse(self.curr_song)
-			self.song_list[self.song_name][1].append(line)
-			self.song_list[self.song_name][2].append(self.curr_song)
+			if self.curr_song != None:
+				self.song_list[self.song_name][1].append(line)
+				self.song_list[self.song_name][2].append(self.curr_song)
+			else:
+				self.curr_song = self.song_list[self.song_name][2][-1]
 			# self.command_history.append(line)	
 			# self.song_history.append(self.curr_song)
 		except:

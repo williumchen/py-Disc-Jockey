@@ -43,9 +43,9 @@ def pitch(sample, action, value):
 	"""
 	# Has to take integer value
 	new_sample = copy.copy(sample)
-	if action == "+":
+	if action == "*":
 		new_sample.frame_rate *= int(value)
-	elif action == "-":
+	elif action == "/":
 		new_sample.frame_rate /= int(value)
 	else:
 		return
