@@ -211,6 +211,7 @@ class Commands(Cmd):
 				self.song_list[self.song_name][2].append(self.curr_song)
 			else:
 				self.curr_song = self.song_list[self.song_name][2][-1]
+				print "Unrecognized command"
 			# self.command_history.append(line)	
 			# self.song_history.append(self.curr_song)
 		except:
