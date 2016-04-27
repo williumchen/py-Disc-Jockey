@@ -202,7 +202,7 @@ class Commands(Cmd):
 				elif "+" in line:
 					self.curr_song = average(temp.file1, temp.file2)
 					self.do_save(temp.result)
-			elif isinstance(temp, Action):
+			elif isinstance(temp, Reverse):
 				self.curr_song = reverse(self.curr_song)
 			self.song_list[self.song_name][1].append(line)
 			self.song_list[self.song_name][2].append(self.curr_song)

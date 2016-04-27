@@ -24,9 +24,9 @@ average_rule = Word(printables)("result") \
 # record_rule = (RECORD)("record") \
 # 			+ Word(printables)("end_file")
 
-action_rule = (REVERSE)("action")
+reverse_rule = (REVERSE)("reverse")
  
-rule = basic_rule | concat_rule | average_rule | action_rule
+rule = basic_rule | concat_rule | average_rule | reverse_rule
 
 rules = OneOrMore(Group(rule))
 
@@ -49,12 +49,12 @@ class Combine:
 		self.file1 = file1
 		self.file2 = file2
 
-class Action:
+class Reverse:
 	"""
 	IR for action rule
 	"""
-	def __init__(self, action):
-		self.action = action
+	def __init__(self, reverse):
+		self.reverse = reverse
 
 # class Record:
 # 	"""
@@ -73,8 +73,8 @@ def parse(line):
 			temp = Basic(r.action, r.effect, r.value)
 		if r.result != '' or r.file1 != '' or r.file2 != '':
 			temp = Combine(r.result, r.file1, r.file2)
-		if r.action != '':
-			temp = Action(r.action)
+		if r.reverse != '':
+			temp = Reverse(r.reverse)
 		# if r.record != '' or r.end != '':
 		# 	temp = Record(r.record, r.end)
 	return temp
