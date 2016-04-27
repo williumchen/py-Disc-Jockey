@@ -181,13 +181,15 @@ class Commands(Cmd):
 					self.curr_song = volume(self.curr_song, temp.action, temp.value)
 				elif temp.effect == "pitch":
 					self.curr_song = pitch(self.curr_song, temp.action, temp.value)
-			if isinstance(temp, Combine):
+			elif isinstance(temp, Combine):
 				if "append" in line:
 					self.curr_song = concat(temp.file1, temp.file2)
 					self.do_save(temp.result)
 				elif "+" in line:
 					self.curr_song = average(temp.file1, temp.file2)
 					self.do_save(temp.result)
+			elif isinstance(temp, Action):
+				self.curr_song = reverse(self.curr_song)
 			self.song_list[self.song_name][1].append(line)
 			self.song_list[self.song_name][2].append(self.curr_song)
 				# self.command_history.append(line)	

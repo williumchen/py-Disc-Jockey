@@ -1,7 +1,7 @@
 from pyparsing import *
 
 # Keywords mapped
-VOLUME, PITCH, APPEND = map(Keyword,"volume pitch append".split())
+VOLUME, PITCH, APPEND, REVERSE = map(Keyword,"volume pitch append reverse".split())
 
 # Define the rules to be parsed
 # TODO: Time stamp rules?
@@ -20,8 +20,10 @@ average_rule = Word(printables)("result") \
 			 + Word(printables)("file1") \
 			 + Literal("+") \
 			 + Word(printables)("file2")
+
+action_rule = (REVERSE)("action")
  
-rule = basic_rule | concat_rule | average_rule
+rule = basic_rule | concat_rule | average_rule | action_rule
 
 rules = OneOrMore(Group(rule))
 
@@ -44,6 +46,13 @@ class Combine:
 		self.file1 = file1
 		self.file2 = file2
 
+class Action:
+	"""
+	IR for action rule
+	"""
+	def __init__(self, action):
+		self.action = action
+
 def parse(line):
 	"""
 	Parses given user input into IR
@@ -53,4 +62,6 @@ def parse(line):
 			temp = Basic(r.action, r.effect, r.value)
 		if r.result != '' or r.file1 != '' or r.file2 != '':
 			temp = Combine(r.result, r.file1, r.file2)
+		if r.action != '':
+			temp = Action(r.action)
 	return temp

@@ -68,9 +68,17 @@ def average(file1, file2):
 	song2 = AudioSegment.from_file(file2)
 	new_sample = song1.overlay(song2)
 	return new_sample
+
+def reverse(sample):
+	"""
+	Input: a .wav file
+	Returns a .wav with the audio played backwards
+	"""
+	new_sample = AudioSegment.reverse(sample)
+	return new_sample
+
 # Allows for threading so REPL doesn't hang while a song
 # is being played
-
 class PlayThread(threading.Thread):
 	""" This class allows for multithreading with pyDJ
 
