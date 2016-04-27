@@ -54,9 +54,17 @@ class Commands(Cmd):
 		"""
 		Sets a song as current song
 		"""
-		self.song_name = arg
-		self.curr_song = self.song_list[arg][0]
-		print "Currently editting: " + arg
+		if arg == '' and self.song_name != None:
+			print "Currently editting: " + self.song_name
+		elif self.song_name == None:
+			print "Not currently editting any song. Refer to 'help load' for more information"
+		else:
+			try:
+				self.song_name = arg
+				self.curr_song = self.song_list[arg][0]
+				print "Currently editting: " + arg
+			except:
+				print "Song not found in workspace. Try loading the song. Refer to 'help load' for more information"
 	def help_edit(self):
 		print "Selects a loaded song to be editted"
 
@@ -66,6 +74,8 @@ class Commands(Cmd):
 		"""
 		print ""
 		for i, key in enumerate(self.song_list):
+			if key == self.song_name:
+				print "*",
 			print "(" + str(i+1) + ") " + str(key)
 		print ""
 	def help_display(self):
