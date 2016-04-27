@@ -201,9 +201,11 @@ class Commands(Cmd):
 				if "append" in line:
 					self.curr_song = concat(temp.file1, temp.file2)
 					self.do_save(temp.result)
+					self.do_load(temp.result)
 				elif "+" in line:
 					self.curr_song = average(temp.file1, temp.file2)
 					self.do_save(temp.result)
+					self.do_load(temp.result)
 			elif isinstance(temp, Reverse):
 				self.curr_song = reverse(self.curr_song)
 			if self.curr_song != None:
