@@ -4,7 +4,6 @@ from pyparsing import *
 VOLUME, PITCH, APPEND, REVERSE, RECORD = map(Keyword,"volume pitch append reverse record".split())
 
 # Define the rules to be parsed
-# TODO: Time stamp rules?
 basic_rule = Word(printables)("action") \
 		+ (VOLUME | PITCH)("effect") \
 		+ Word(nums)("value")
@@ -21,12 +20,21 @@ average_rule = Word(printables)("result") \
 			 + Literal("+") \
 			 + Word(printables)("file2")
 
+time_rule = Word(printables)("cut") \
+		  + Word(nums)("min") \
+		  + Literal(":") \
+		  + Word(nums)("sec") \
+		  + Word(printables)("to") \
+		  + Word(nums)("min2") \
+		  + Literal(":") \
+		  + Word(nums)("sec2") \
+
 # record_rule = (RECORD)("record") \
 # 			+ Word(printables)("end_file")
 
 reverse_rule = (REVERSE)("reverse")
  
-rule = basic_rule | concat_rule | average_rule | reverse_rule
+rule = basic_rule | concat_rule | average_rule | reverse_rule | time_rule
 
 rules = OneOrMore(Group(rule))
 
@@ -56,6 +64,16 @@ class Reverse:
 	def __init__(self, reverse):
 		self.reverse = reverse
 
+class Time:
+	"""
+	IR for cutting song files
+	"""
+	def __init__(self, minute, sec, minute2, sec2):
+		self.minute = minute
+		self.sec = sec
+		self.minute2 = minute2
+		self.sec2 = sec2
+
 # class Record:
 # 	"""
 # 	IR for record rule
@@ -75,6 +93,8 @@ def parse(line):
 			temp = Combine(r.result, r.file1, r.file2)
 		if r.reverse != '':
 			temp = Reverse(r.reverse)
+		if r.minute != '' or r.sec != '' or r.minute2 != '' or r.sec2 != '':
+			temp = Time(r.min, r.sec, r.min2, r.sec2)
 		# if r.record != '' or r.end != '':
 		# 	temp = Record(r.record, r.end)
 	return temp

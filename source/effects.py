@@ -99,12 +99,27 @@ class Thread(threading.Thread):
 
 def playSample(sample):
 	""" 
+	Input: a .wav file
 	Plays the current song in the REPL interface
 	"""
 	try:
 		play(sample)
 	except:
 		print "File not found"
+
+def cut(sample, minute, sec, minute2, sec2):
+	"""
+	Input: a .wav file
+	Cuts sample at specified minute and second mark
+	"""
+	# Conver to milliseconds
+	start = int(minute) * 60 * 1000 + int(sec) * 1000
+	end = int(minute2) * 60 * 1000 + int(sec2) * 1000
+	if start < end:
+		new_sample = sample[start:end]
+		return new_sample 
+	else:
+		print "End time is earlier than start time"
 
 # TODO: Not working, need to figure out threading and keyboard interrupt
 def record(end):

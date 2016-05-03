@@ -209,6 +209,12 @@ class Commands(Cmd):
 					self.do_load(temp.result)
 			elif isinstance(temp, Reverse):
 				self.curr_song = reverse(self.curr_song)
+			elif isinstance(temp, Time):
+				print temp.minute
+				print temp.sec
+				print temp.minute2
+				print temp.sec2
+				self.curr_song = cut(self.curr_song, temp.minute, temp.sec, temp.minute2, temp.sec2)
 			if self.curr_song != None:
 				self.song_list[self.song_name][1].append(line)
 				self.song_list[self.song_name][2].append(self.curr_song)
