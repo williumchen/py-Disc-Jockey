@@ -1,9 +1,11 @@
 from pyparsing import *
 
 # Keywords mapped
-VOLUME, PITCH, APPEND, REVERSE, RECORD = map(Keyword,"volume pitch append reverse record".split())
+
+VOLUME, PITCH, APPEND, REVERSE, RECORD, CUT = map(Keyword,"volume pitch append reverse record cut".split())
 
 # Define the rules to be parsed
+
 basic_rule = Word(printables)("action") \
 		+ (VOLUME | PITCH)("effect") \
 		+ Word(nums)("value")
@@ -20,7 +22,7 @@ average_rule = Word(printables)("result") \
 			 + Literal("+") \
 			 + Word(printables)("file2")
 
-time_rule = Word(printables)("cut") \
+time_rule = (CUT)("cut") \
 		  + Word(nums)("min") \
 		  + Literal(":") \
 		  + Word(nums)("sec") \
@@ -29,6 +31,7 @@ time_rule = Word(printables)("cut") \
 		  + Literal(":") \
 		  + Word(nums)("sec2") \
 
+# TODO: Look into threading with record + keyboard interrupt
 # record_rule = (RECORD)("record") \
 # 			+ Word(printables)("end_file")
 
