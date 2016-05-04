@@ -23,7 +23,8 @@ py-DJ uses several external libraries. In order to use these libraries, [pip](ht
 3. In the source directory, run the REPL file ``` repl.py ```:
 
   ``` python repl.py ```
-  
+
+NOTE: Bash script automating the installation of dependencies assume Mac OS X (relies on Homebrew to install PortAudio and pyAudio). If running on another OS, install the following independencies by following the instructions linked: [pyAudio](http://people.csail.mit.edu/hubert/pyaudio/#downloads), [pydub](https://github.com/jiaaro/pydub), [pyparsing](https://pyparsing.wikispaces.com/Download+and+Installation?responseToken=ba0577696eb58c92e4d813bcd183caf9).
 ## Usage
 py-DJ uses a REPL such that users can write programs simply passing input in line by line.
 
