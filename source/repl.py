@@ -110,8 +110,6 @@ class Commands(Cmd):
 		"""
 		try:
 			if arg == '':
-				# self.song_history.pop()
-				# self.command_history.pop()
 				self.song_list[self.song_name][1].pop()
 				self.song_list[self.song_name][2].pop()
 				self.song_list[self.song_name][0] = self.song_list[self.song_name][2][-1]
@@ -119,9 +117,6 @@ class Commands(Cmd):
 				# self.curr_song = self.song_history[-1]
 			elif arg != '':
 				for x in range(int(arg)):
-					# self.song_history.pop()
-					# self.command_history.pop()
-					# self.curr_song = self.song_history[-1]
 					self.song_list[self.song_name][1].pop()
 					self.song_list[self.song_name][2].pop()
 					self.song_list[self.song_name][0] = self.song_list[self.song_name][2][-1]
@@ -166,9 +161,6 @@ class Commands(Cmd):
 			if not self.song_list[self.song_name][1]:
 				print "No existing history of edits"
 			else:
-				# self.curr_song = list(reversed(self.song_history))[int(line)]
-				# del self.song_history[-(int(line)-1):]
-				# del self.command_history[-(int(line)-1):]
 				self.song_list[self.song_name][0] = list(reversed(self.song_list[self.song_name][2]))[int(line)-1]
 				self.curr_song = self.song_list[self.song_name][0]
 				# Song history
@@ -186,6 +178,7 @@ class Commands(Cmd):
 		"""
 		try:
 			temp = parse(line)
+		# TODO: Look into threading with record + keyboard interrupt
 		# 	if isinstance(temp, Record):
 		# 		Thread(record, temp.end).start()
 		# 		self.do_load(temp.end)
@@ -210,10 +203,6 @@ class Commands(Cmd):
 			elif isinstance(temp, Reverse):
 				self.curr_song = reverse(self.curr_song)
 			elif isinstance(temp, Time):
-				print temp.minute
-				print temp.sec
-				print temp.minute2
-				print temp.sec2
 				self.curr_song = cut(self.curr_song, temp.minute, temp.sec, temp.minute2, temp.sec2)
 			if self.curr_song != None:
 				self.song_list[self.song_name][1].append(line)
@@ -221,8 +210,6 @@ class Commands(Cmd):
 			else:
 				self.curr_song = self.song_list[self.song_name][2][-1]
 				print "Unrecognized command"
-			# self.command_history.append(line)	
-			# self.song_history.append(self.curr_song)
 		except:
 			print "Unrecognized command"
 	
@@ -232,9 +219,17 @@ class Commands(Cmd):
 	def help_pitch(self):
 		print "+,- pitch (integer value)"
 	def help_concat(self):
+		print "Adds two sound files end to end"
 		print "result = file1.wav append file2.wav"
 	def help_average(self):
+		print "Overlays two sound files"
 		print "result = file1.wav + file2.wav"
+	def help_reverse(self):
+		print "Reverses a sound file"
+		print "reverse"
+	def help_cut(self):
+		print "Cut out a segment of a sound file at specified time intervals"
+		print "cut 0:03 to 0:08"
 
 	# Record and playback commands
 	def do_track(self, arg):
