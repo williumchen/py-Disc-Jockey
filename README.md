@@ -27,11 +27,9 @@ py-DJ uses several external libraries. In order to use these libraries, [pip](ht
 ## Usage
 py-DJ uses a REPL such that users can write programs simply passing input in line by line.
 
-All currently implemented features can be summarized by using ``` help ``` or ``` ? ``` in the REPL interface. Further details of each features are found by typing ``` help [feature] ```.
+All currently implemented features can be summarized by using ``` help ``` or ``` ? ``` in the REPL interface, or by referring to the documentation below. Further details of each features are found by typing ``` help [feature] ```.
 
 ## Documentation
-A brief summary of all implemented features is shown below:
-
 Load an audio file into the work-space with ` load <file name> `
 
 Display the current audio file being edited with `edit`
