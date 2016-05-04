@@ -5,15 +5,21 @@ py-DJ is a free domain-specific language for quickly editting audio files in a w
 
 ## Dependencies
 * Python 2.7.x
+* pip
 
 ### Python
 Use of py-DJ relies on [Python 2.7.x](https://www.python.org/downloads/). 
+
+### Pip
+py-DJ uses several external libraries. In order to use these libraries, [pip](https://pypi.python.org/pypi/pip) must be installed. pip is a Python package manager that is used by `installation.sh`, a shell script to ensure all proper dependencies are installed.
 
 ## Installing py-DJ
 1. Clone the repository using ``` git ```:
 
   ``` git clone https://github.com/williumchen/py-disc-jockey.git ```
-2. Run the REPL file ``` repl.py ``` in the source directory with:
+2. In the source directory, run `installation.sh` (may require sudo):
+  ``` ./installation.sh ```
+3. In the source directory, run the REPL file ``` repl.py ```:
 
   ``` python repl.py ```
   
