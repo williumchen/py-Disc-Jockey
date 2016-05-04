@@ -19,7 +19,7 @@ py-DJ uses several external libraries. In order to use these libraries, [pip](ht
   ``` git clone https://github.com/williumchen/py-disc-jockey.git ```
 2. In the source directory, run `installation.sh` (may require sudo):
 
-  ``` ./installation.sh ```
+  ``` bash installation.sh ```
 3. In the source directory, run the REPL file ``` repl.py ```:
 
   ``` python repl.py ```
